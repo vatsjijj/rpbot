@@ -1,4 +1,5 @@
 final Map<String, int> debuffs = {
+  'Dead': 0x7FFFFFFFFFFFFFFF,
   'Exhaustion': 5,
   'Insomnia': 10,
   'Hunger': 3,
@@ -12,6 +13,7 @@ final Map<String, int> debuffs = {
   'Alcohol Addiction': 3,
   'Nicotine Addiction': 4,
   'Drug Addiction': 5,
+  'Ketamine Addiction': 6,
   'Minor Withdrawal': 3,
   'Moderate Withdrawal': 5,
   'Severe Withdrawal': 7,
