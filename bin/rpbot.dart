@@ -95,6 +95,15 @@ void main() async {
             description: 'The buff of the character.',
             isRequired: true),
       ]));
+  await client.commands.create(ApplicationCommandBuilder.chatInput(
+      name: 'status',
+      description: 'Check the status of a character.',
+      options: [
+        CommandOptionBuilder.string(
+            name: 'name',
+            description: 'The character to check.',
+            isRequired: true),
+      ]));
 
   client.onApplicationCommandInteraction.listen(commands.handleEvent);
 

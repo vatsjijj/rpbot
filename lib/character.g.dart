@@ -9,6 +9,7 @@ part of 'character.dart';
 Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       json['name'] as String,
     )
+      ..total = (json['total'] as num).toInt()
       ..debuffs =
           (json['debuffs'] as List<dynamic>).map((e) => e as String).toList()
       ..buffs =
@@ -16,6 +17,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'name': instance.name,
+      'total': instance.total,
       'debuffs': instance.debuffs,
       'buffs': instance.buffs,
     };

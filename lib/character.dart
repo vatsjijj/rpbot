@@ -6,6 +6,7 @@ part 'character.g.dart';
 @JsonSerializable()
 class Character {
   final String name;
+  int total = 0;
   List<String> debuffs = [], buffs = [];
 
   Character(this.name);

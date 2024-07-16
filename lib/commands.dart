@@ -21,6 +21,7 @@ final commands = {
   'characters': 'Lists all characters.',
   'debuff': 'Debuffs a character.',
   'buff': 'Buffs a character.',
+  'status': 'Check the status of a character.',
 };
 
 typedef Event = InteractionCreateEvent<ApplicationCommandInteraction>;
@@ -58,6 +59,8 @@ void handleEvent(Event event) async {
       await debuff(event);
     case 'buff':
       await buff(event);
+    case 'status':
+      await stats(event);
   }
 }
 
@@ -208,11 +211,14 @@ Future<void> debuff(Event event) async {
     await respondMessage(event, '$debuff does not exist!');
     return;
   } else if (ctx.characters[name]!.debuffs.contains(debuff)) {
-    await respondMessage(event, '$name already has $debuff!');
+    ctx.characters[name]?.debuffs.remove(debuff);
+    ctx.characters[name]?.total += status.debuffs[debuff]!;
+    await respondMessage(event, '$name no longer has $debuff!');
     return;
   }
 
   ctx.characters[name]?.debuffs.add(debuff);
+  ctx.characters[name]?.total -= status.debuffs[debuff]!;
 
   await respondMessage(event, '$name has been inflicted with $debuff!');
 
@@ -235,11 +241,14 @@ Future<void> buff(Event event) async {
     await respondMessage(event, '$buff does not exist!');
     return;
   } else if (ctx.characters[name]!.buffs.contains(buff)) {
-    await respondMessage(event, '$name already has $buff!');
+    ctx.characters[name]?.buffs.remove(buff);
+    ctx.characters[name]?.total -= status.buffs[buff]!;
+    await respondMessage(event, '$name no longer has $buff!');
     return;
   }
 
   ctx.characters[name]?.buffs.add(buff);
+  ctx.characters[name]?.total += status.buffs[buff]!;
 
   await respondMessage(event, '$name has been improved with $buff!');
 
@@ -247,4 +256,26 @@ Future<void> buff(Event event) async {
   final json = jsonEncode(ctx);
   f.write(json);
   f.close();
+}
+
+Future<void> stats(Event event) async {
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
+
+  if (!ctx.characters.containsKey(name)) {
+    await respondMessage(event, '$name does not exist.');
+    return;
+  }
+
+  var result = '## $name\n';
+
+  result += 'Character total: **${ctx.characters[name]?.total}**\nBuffs:\n';
+
+  ctx.characters[name]?.buffs.forEach((e) => result += '- *$e*\n');
+
+  result += 'Debuffs:\n';
+
+  ctx.characters[name]?.debuffs.forEach((e) => result += '- *$e*\n');
+
+  await respondMessage(event, result);
 }
