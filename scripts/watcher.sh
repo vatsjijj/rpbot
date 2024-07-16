@@ -1,6 +1,6 @@
 #!/bin/bash
 
-count = 0
+count=0
 
 until ./run.sh; do
 	((i++))
