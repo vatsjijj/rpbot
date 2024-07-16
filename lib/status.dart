@@ -29,7 +29,7 @@ final Map<String, int> debuffs = {
 };
 
 final Map<String, int> buffs = {
-  'Caffeinated': 3,
+  'Caffeinated': 4,
   'Well Fed': 3,
   'Well Hydrated': 3,
   'Well Rested': 3,
@@ -37,4 +37,6 @@ final Map<String, int> buffs = {
   'Moderately Protected': 5,
   'Very Protected': 8,
   'Extremely Protected': 10,
+  'Energized': 2,
+  'Campfire': 3,
 };

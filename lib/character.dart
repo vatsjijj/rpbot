@@ -1,10 +1,19 @@
 import 'package:rpbot/status.dart' as status;
+import 'package:json_annotation/json_annotation.dart';
 
+part 'character.g.dart';
+
+@JsonSerializable()
 class Character {
   final String name;
   List<String> debuffs = [], buffs = [];
 
   Character(this.name);
+
+  factory Character.fromJson(Map<String, dynamic> json) =>
+      _$CharacterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CharacterToJson(this);
 
   bool addBuff(String buff) {
     if (!status.buffs.containsKey(buff)) {

@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:rpbot/commands.dart' as commands;
+import 'package:rpbot/character.dart' as character;
+import 'package:rpbot/context.dart' as context;
 import 'package:nyxx/nyxx.dart';
+import 'dart:convert';
 
 void main() async {
   final ttk = File('ttk.txt').readAsStringSync();
@@ -44,6 +47,31 @@ void main() async {
               name: 'dc', description: 'Difficulty class.', isRequired: true)
         ]));
   */
+  await client.commands.create(ApplicationCommandBuilder.chatInput(
+      name: 'register',
+      description: 'Register a character.',
+      options: [
+        CommandOptionBuilder.string(
+            name: 'name',
+            description: 'Name of the character.',
+            isRequired: true),
+      ]));
+  await client.commands.create(ApplicationCommandBuilder.chatInput(
+      name: 'unregister',
+      description: 'Unregister a character.',
+      options: [
+        CommandOptionBuilder.string(
+            name: 'name',
+            description: 'Name of the character.',
+            isRequired: true),
+      ]));
 
   client.onApplicationCommandInteraction.listen(commands.handleEvent);
+
+  if (!await File('context.ctx').exists()) {
+    print('Context file does not exist!');
+  } else {
+    final json = await File('context.ctx').readAsString();
+    commands.ctx = jsonDecode(json) as context.Context;
+  }
 }

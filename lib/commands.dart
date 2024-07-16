@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:rpbot/status.dart' as status;
 import 'package:rpbot/algo.dart' as algo;
+import 'package:rpbot/context.dart' as context;
+import 'dart:convert';
 import 'package:nyxx/nyxx.dart';
+
+var ctx = context.Context();
 
 final commands = {
   'help': 'Shows this message.',
@@ -11,6 +17,8 @@ final commands = {
   'roll': 'Roll a D20 with DC.',
   'advantage': 'Roll a D20 with DC for advantage.',
   'disadvantage': 'Roll a D20 with DC for disadvantage.',
+  'register': 'Registers a character.',
+  'unregister': 'Unregisters a character.',
 };
 
 typedef Event = InteractionCreateEvent<ApplicationCommandInteraction>;
@@ -38,6 +46,10 @@ void handleEvent(Event event) async {
       await advantage(event);
     case 'disadvantage':
       await disadvantage(event);
+    case 'register':
+      await register(event);
+    case 'unregister':
+      await unregister(event);
   }
 }
 
@@ -133,4 +145,32 @@ Future<void> disadvantage(Event event) async {
   result += '**${success ? 'Success' : 'Failure'}.**';
 
   await respondMessage(event, result);
+}
+
+Future<void> register(Event event) async {
+  final name = event.interaction.data.options?.elementAt(0).value as String;
+
+  if (!ctx.addCharacter(name)) {
+    await respondMessage(event, 'Character could not be created!');
+    return;
+  }
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  await f.close();
+}
+
+Future<void> unregister(Event event) async {
+  final name = event.interaction.data.options?.elementAt(0).value as String;
+
+  if (!ctx.removeCharacter(name)) {
+    await respondMessage(event, 'Character could not be unregistered!');
+    return;
+  }
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  await f.close();
 }
