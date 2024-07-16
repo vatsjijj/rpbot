@@ -94,7 +94,14 @@ Future<void> shade(Event event) async {
 }
 
 Future<void> roll(Event event) async {
-  final dc = event.interaction.data.options?.elementAt(0).value as int;
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
+  var dc = event.interaction.data.options?.elementAt(1).value as int;
+
+  if (!ctx.characters.containsKey(name)) {
+    await respondMessage(event, '$name does not exist!');
+    return;
+  }
 
   if (dc > 30) {
     await respondMessage(event, 'DC cannot be above 30!');
@@ -105,7 +112,11 @@ Future<void> roll(Event event) async {
   }
 
   final roll = algo.rollD20();
-  var result = 'You rolled $roll with a DC of $dc.\n';
+  var result =
+      'You rolled $roll with a DC of $dc for $name with a skill of ${ctx.characters[name]!.total}.\n';
+
+  dc -= ctx.characters[name]!.total;
+
   final success = roll >= dc;
   result += 'The result of your action was... ';
   result += '**${success ? 'Success' : 'Failure'}.**';
