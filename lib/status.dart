@@ -42,4 +42,6 @@ final Map<String, int> buffs = {
   'Energized': 2,
   'Campfire': 3,
   'Healthy': 8,
+  'High': 5,
+  'Rejuvenated': 1,
 };
