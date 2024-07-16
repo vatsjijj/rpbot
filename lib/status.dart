@@ -27,6 +27,7 @@ final Map<String, int> debuffs = {
   'Agony': 10,
   'Dirty': 0,
   'Encumbered': 5,
+  'Unhealthy': 8,
 };
 
 final Map<String, int> buffs = {
@@ -40,4 +41,5 @@ final Map<String, int> buffs = {
   'Extremely Protected': 10,
   'Energized': 2,
   'Campfire': 3,
+  'Healthy': 8,
 };
