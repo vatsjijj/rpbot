@@ -26,6 +26,7 @@ class Context {
 
   bool removeCharacter(String name) {
     if (!characters.containsKey(name)) {
+      print(characters);
       print('$name could not be removed');
       return false;
     }
