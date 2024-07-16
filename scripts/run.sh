@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./../rpbot &
+cd ../
+./rpbot &
+cd scripts/
