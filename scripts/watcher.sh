@@ -2,6 +2,8 @@
 
 count=0
 
+echo "Watching process!"
+
 until ./run.sh; do
 	((i++))
 	echo "Process died with exit code $?. Respawning." >&2
