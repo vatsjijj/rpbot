@@ -4,7 +4,8 @@ count=0
 
 echo "Watching process!"
 
-until ./run.sh; do
+cd ..
+until (./rpbot > log.txt 2>&1); do
 	((i++))
 	echo "Process died with exit code $?. Respawning." >&2
 	cd ..
@@ -12,3 +13,4 @@ until ./run.sh; do
 	cd scripts
 	sleep 1
 done
+cd scripts
