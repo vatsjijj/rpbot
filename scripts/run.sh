@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd ../
-./rpbot &
+./rpbot > log.txt 2>&1 &
 cd scripts/
