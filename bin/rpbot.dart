@@ -65,6 +65,10 @@ void main() async {
             description: 'Name of the character.',
             isRequired: true),
       ]));
+  await client.commands.create(
+    ApplicationCommandBuilder.chatInput(
+        name: 'characters', description: 'Lists all characters.', options: []),
+  );
 
   client.onApplicationCommandInteraction.listen(commands.handleEvent);
 

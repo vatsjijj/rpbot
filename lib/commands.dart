@@ -19,6 +19,7 @@ final commands = {
   'disadvantage': 'Roll a D20 with DC for disadvantage.',
   'register': 'Registers a character.',
   'unregister': 'Unregisters a character.',
+  'characters': 'Lists all characters.',
 };
 
 typedef Event = InteractionCreateEvent<ApplicationCommandInteraction>;
@@ -158,7 +159,7 @@ Future<void> register(Event event) async {
   var f = File('context.ctx').openWrite();
   final json = jsonEncode(ctx);
   f.write(json);
-  await f.close();
+  f.close();
 }
 
 Future<void> unregister(Event event) async {
@@ -172,5 +173,11 @@ Future<void> unregister(Event event) async {
   var f = File('context.ctx').openWrite();
   final json = jsonEncode(ctx);
   f.write(json);
-  await f.close();
+  f.close();
+}
+
+Future<void> characters(Event event) async {
+  var str = '';
+  ctx.characters.forEach((k, v) => str += '- *$k*\n');
+  await respondMessage(event, str);
 }
