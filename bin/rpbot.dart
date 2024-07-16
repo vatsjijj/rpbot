@@ -47,28 +47,54 @@ void main() async {
               name: 'dc', description: 'Difficulty class.', isRequired: true)
         ]));
   */
+  // await client.commands.create(ApplicationCommandBuilder.chatInput(
+  //     name: 'register',
+  //     description: 'Register a character.',
+  //     options: [
+  //       CommandOptionBuilder.string(
+  //           name: 'name',
+  //           description: 'Name of the character.',
+  //           isRequired: true),
+  //     ]));
+  // await client.commands.create(ApplicationCommandBuilder.chatInput(
+  //     name: 'unregister',
+  //     description: 'Unregister a character.',
+  //     options: [
+  //       CommandOptionBuilder.string(
+  //           name: 'name',
+  //           description: 'Name of the character.',
+  //           isRequired: true),
+  //     ]));
+  // await client.commands.create(
+  //   ApplicationCommandBuilder.chatInput(
+  //       name: 'characters', description: 'Lists all characters.', options: []),
+  // );
   await client.commands.create(ApplicationCommandBuilder.chatInput(
-      name: 'register',
-      description: 'Register a character.',
+      name: 'debuff',
+      description: 'Debuffs a character.',
       options: [
         CommandOptionBuilder.string(
             name: 'name',
-            description: 'Name of the character.',
+            description: 'The name of the character.',
+            isRequired: true),
+        CommandOptionBuilder.string(
+            name: 'debuff',
+            description: 'The debuff of the character.',
             isRequired: true),
       ]));
   await client.commands.create(ApplicationCommandBuilder.chatInput(
-      name: 'unregister',
-      description: 'Unregister a character.',
+      name: 'buff',
+      description: 'Buffs a character.',
       options: [
         CommandOptionBuilder.string(
             name: 'name',
-            description: 'Name of the character.',
+            description: 'The name of the character.',
+            isRequired: true),
+        CommandOptionBuilder.string(
+            name: 'buff',
+            description: 'The buff of the character.',
             isRequired: true),
       ]));
-  await client.commands.create(
-    ApplicationCommandBuilder.chatInput(
-        name: 'characters', description: 'Lists all characters.', options: []),
-  );
 
   client.onApplicationCommandInteraction.listen(commands.handleEvent);
 

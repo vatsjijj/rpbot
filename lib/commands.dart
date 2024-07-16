@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:rpbot/status.dart' as status;
 import 'package:rpbot/algo.dart' as algo;
 import 'package:rpbot/context.dart' as context;
@@ -20,6 +19,8 @@ final commands = {
   'register': 'Registers a character.',
   'unregister': 'Unregisters a character.',
   'characters': 'Lists all characters.',
+  'debuff': 'Debuffs a character.',
+  'buff': 'Buffs a character.',
 };
 
 typedef Event = InteractionCreateEvent<ApplicationCommandInteraction>;
@@ -49,18 +50,14 @@ void handleEvent(Event event) async {
       await disadvantage(event);
     case 'register':
       await register(event);
-      var f = File('context.ctx').openWrite();
-      final json = jsonEncode(ctx);
-      f.write(json);
-      f.close();
     case 'unregister':
       await unregister(event);
-      var f = File('context.ctx').openWrite();
-      final json = jsonEncode(ctx);
-      f.write(json);
-      f.close();
     case 'characters':
       await characters(event);
+    case 'debuff':
+      await debuff(event);
+    case 'buff':
+      await buff(event);
   }
 }
 
@@ -159,25 +156,95 @@ Future<void> disadvantage(Event event) async {
 }
 
 Future<void> register(Event event) async {
-  final name = event.interaction.data.options?.elementAt(0).value as String;
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
 
-  if (!ctx.addCharacter(name)) {
+  bool status = !ctx.addCharacter(name);
+
+  if (status) {
     await respondMessage(event, 'Character could not be created!');
     return;
   }
+  await respondMessage(event, '$name was created.');
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  f.close();
 }
 
 Future<void> unregister(Event event) async {
-  final name = event.interaction.data.options?.elementAt(0).value as String;
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
 
   if (!ctx.removeCharacter(name)) {
     await respondMessage(event, 'Character could not be unregistered!');
     return;
   }
+  await respondMessage(event, '$name was unregistered.');
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  f.close();
 }
 
 Future<void> characters(Event event) async {
-  var str = '';
+  var str = 'Characters:\n';
   ctx.characters.forEach((k, v) => str += '- *$k*\n');
   await respondMessage(event, str);
+}
+
+Future<void> debuff(Event event) async {
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
+  final debuff = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(1).value as String);
+
+  if (!ctx.characters.containsKey(name)) {
+    await respondMessage(event, '$name does not exist!');
+    return;
+  } else if (!status.debuffs.containsKey(debuff)) {
+    await respondMessage(event, '$debuff does not exist!');
+    return;
+  } else if (ctx.characters[name]!.debuffs.contains(debuff)) {
+    await respondMessage(event, '$name already has $debuff!');
+    return;
+  }
+
+  ctx.characters[name]?.debuffs.add(debuff);
+
+  await respondMessage(event, '$name has been inflicted with $debuff!');
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  f.close();
+}
+
+Future<void> buff(Event event) async {
+  final name = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(0).value as String);
+  final buff = algo.sentenceCase(
+      event.interaction.data.options?.elementAt(1).value as String);
+
+  if (!ctx.characters.containsKey(name)) {
+    await respondMessage(event, '$name does not exist!');
+    return;
+  } else if (!status.buffs.containsKey(buff)) {
+    await respondMessage(event, '$buff does not exist!');
+    return;
+  } else if (ctx.characters[name]!.buffs.contains(buff)) {
+    await respondMessage(event, '$name already has $buff!');
+    return;
+  }
+
+  ctx.characters[name]?.buffs.add(buff);
+
+  await respondMessage(event, '$name has been improved with $buff!');
+
+  var f = File('context.ctx').openWrite();
+  final json = jsonEncode(ctx);
+  f.write(json);
+  f.close();
 }
