@@ -72,6 +72,6 @@ void main() async {
     print('Context file does not exist!');
   } else {
     final json = await File('context.ctx').readAsString();
-    commands.ctx = jsonDecode(json) as context.Context;
+    commands.ctx = jsonDecode(json);
   }
 }
