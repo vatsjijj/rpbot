@@ -49,8 +49,18 @@ void handleEvent(Event event) async {
       await disadvantage(event);
     case 'register':
       await register(event);
+      var f = File('context.ctx').openWrite();
+      final json = jsonEncode(ctx);
+      f.write(json);
+      f.close();
     case 'unregister':
       await unregister(event);
+      var f = File('context.ctx').openWrite();
+      final json = jsonEncode(ctx);
+      f.write(json);
+      f.close();
+    case 'characters':
+      await characters(event);
   }
 }
 
@@ -155,11 +165,6 @@ Future<void> register(Event event) async {
     await respondMessage(event, 'Character could not be created!');
     return;
   }
-
-  var f = File('context.ctx').openWrite();
-  final json = jsonEncode(ctx);
-  f.write(json);
-  f.close();
 }
 
 Future<void> unregister(Event event) async {
@@ -169,11 +174,6 @@ Future<void> unregister(Event event) async {
     await respondMessage(event, 'Character could not be unregistered!');
     return;
   }
-
-  var f = File('context.ctx').openWrite();
-  final json = jsonEncode(ctx);
-  f.write(json);
-  f.close();
 }
 
 Future<void> characters(Event event) async {
